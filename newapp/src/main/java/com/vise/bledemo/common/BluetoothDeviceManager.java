@@ -9,7 +9,6 @@ import com.vise.baseble.callback.IBleCallback;
 import com.vise.baseble.callback.IConnectCallback;
 import com.vise.baseble.callback.scan.IScanCallback;
 import com.vise.baseble.callback.scan.ScanCallback;
-import com.vise.baseble.common.BleConstant;
 import com.vise.baseble.common.PropertyType;
 import com.vise.baseble.core.BluetoothGattChannel;
 import com.vise.baseble.core.DeviceMirror;
@@ -205,7 +204,7 @@ public class BluetoothDeviceManager {
     }
 
     public void bindChannel(BluetoothLeDevice bluetoothLeDevice, PropertyType propertyType, UUID serviceUUID,
-                                 UUID characteristicUUID, UUID descriptorUUID) {
+                            UUID characteristicUUID, UUID descriptorUUID) {
         DeviceMirror deviceMirror = mDeviceMirrorPool.getDeviceMirror(bluetoothLeDevice);
         if (deviceMirror != null) {
             BluetoothGattChannel bluetoothGattChannel = new BluetoothGattChannel.Builder()
@@ -248,6 +247,7 @@ public class BluetoothDeviceManager {
 
     //发送队列，提供一种简单的处理方式，实际项目场景需要根据需求优化
     private Queue<byte[]> dataInfoQueue = new LinkedList<>();
+
     private void send(final BluetoothLeDevice bluetoothLeDevice) {
         if (dataInfoQueue != null && !dataInfoQueue.isEmpty()) {
             DeviceMirror deviceMirror = mDeviceMirrorPool.getDeviceMirror(bluetoothLeDevice);
