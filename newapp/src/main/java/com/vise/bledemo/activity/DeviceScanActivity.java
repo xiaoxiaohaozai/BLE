@@ -34,18 +34,21 @@ public class DeviceScanActivity extends AppCompatActivity {
     //设备扫描结果展示适配器
     private DeviceAdapter adapter;
 
+    private BluetoothLeDeviceStore bluetoothLeDeviceStore = new BluetoothLeDeviceStore();
+
     /**
      * 扫描回调
      */
     private ScanCallback periodScanCallback = new ScanCallback(new IScanCallback() {
         @Override
-        public void onDeviceFound(final BluetoothLeDeviceStore bluetoothLeDeviceStore) {
-            ViseLog.i("Founded Scan Device:" + bluetoothLeDeviceStore);
+        public void onDeviceFound(final BluetoothLeDevice bluetoothLeDevice) {
+            ViseLog.i("Founded Scan Device:" + bluetoothLeDevice);
+            bluetoothLeDeviceStore.addDevice(bluetoothLeDevice);
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     if (adapter != null && bluetoothLeDeviceStore != null) {
-                        adapter.setDeviceList(bluetoothLeDeviceStore.getDeviceList());
+                        adapter.setListAll(bluetoothLeDeviceStore.getDeviceList());
                         updateItemCount(adapter.getCount());
                     }
                 }
@@ -102,6 +105,7 @@ public class DeviceScanActivity extends AppCompatActivity {
         super.onPause();
         stopScan();
         invalidateOptionsMenu();
+        bluetoothLeDeviceStore.clear();
     }
 
     @Override
@@ -155,7 +159,7 @@ public class DeviceScanActivity extends AppCompatActivity {
     private void startScan() {
         updateItemCount(0);
         if (adapter != null) {
-            adapter.setDeviceList(new ArrayList<BluetoothLeDevice>());
+            adapter.setListAll(new ArrayList<BluetoothLeDevice>());
         }
         ViseBle.getInstance().startScan(periodScanCallback);
         invalidateOptionsMenu();
